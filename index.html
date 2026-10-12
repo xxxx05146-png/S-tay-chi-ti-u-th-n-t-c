@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Sổ Tay Chi Tiêu Cá Nhân</title>
+  
+  <!-- PWA & Mobile Optimization Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Chi Tiêu">
+  <meta name="theme-color" content="#0f172a" id="meta-theme-color">
+  <meta name="description" content="Sổ tay chi tiêu cá nhân siêu tốc, nhập liệu 1 chạm, nhận diện nghìn đồng, PWA offline-first.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💸</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%232563eb'/><text x='50%' y='55%' dominant-baseline='central' text-anchor='middle' font-size='60'>💸</text></svg>">
+
+  <!-- Embedded Web App Manifest -->
+  <link rel="manifest" href="data:application/manifest+json;utf-8,%7B%22name%22%3A%22S%E1%BB%95%20Tay%20Chi%20Ti%C3%AAu%22%2C%22short_name%22%3A%22ChiTi%C3%AAu%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Crect%20width%3D'100'%20height%3D'100'%20rx%3D'20'%20fill%3D'%232563eb'%2F%3E%3Ctext%20x%3D'50%25'%20y%3D'55%25'%20dominant-baseline%3D'central'%20text-anchor%3D'middle'%20font-size%3D'60'%3E%F0%9F%92%B8%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+
+  <style>
+    /* CSS RESET & VARIABLES */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    :root {
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Light theme tokens */
+      --bg-body: #f1f5f9;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-card: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-inverted: #ffffff;
+      --border-color: #e2e8f0;
+      --key-bg: #ffffff;
+      --key-active: #e2e8f0;
+      --key-text: #1e293b;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --card-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      
+      /* Colors */
+      --color-primary: #2563eb;
+      --color-expense: #ef4444;
+      --color-income: #16a34a;
+    }
+
+    [data-theme="dark"] {
+      --bg-body: #090d16;
+      --bg-surface: #111827;
+      --bg-subtle: #1f2937;
+      --bg-card: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      --text-main: #f9fafb;
+      --text-muted: #94a3b8;
+      --text-inverted: #ffffff;
+      --border-color: #1e293b;
+      --key-bg: #1e293b;
+      --key-active: #334155;
+      --key-text: #f8fafc;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      touch-action: manipulation;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* APP CONTAINER (Mobile Frame) */
+    .app-viewport {
+      width: 100%;
+      max-width: 440px;
+      min-height: 100vh;
+      background: var(--bg-surface);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+      padding: env(safe-area-inset-top, 10px) 16px env(safe-area-inset-bottom, 16px) 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0 12px 0;
+    }
+
+    .date-display {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .date-heading {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.2px;
+    }
+
+    .date-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .icon-btn:active {
+      transform: scale(0.92);
+      background: var(--border-color);
+    }
+
+    /* BALANCE CARD */
+    .balance-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      color: var(--text-inverted);
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .balance-card::before {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 110px;
+      height: 110px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.4) 0%, rgba(37, 99, 235, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .balance-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .balance-label {
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+    }
+
+    .balance-toggle-view {
+      font-size: 13px;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .balance-amount {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      color: #ffffff;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    /* Daily Limit Section */
+    .limit-container {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .limit-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      margin-bottom: 5px;
+      color: #cbd5e1;
+    }
+
+    .limit-progress-bar {
+      height: 6px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .limit-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #06b6d4);
+      border-radius: 10px;
+      transition: width 0.4s ease, background 0.3s ease;
+    }
+
+    .limit-progress-fill.warning {
+      background: linear-gradient(90deg, #f59e0b, #f97316);
+    }
+
+    .limit-progress-fill.danger {
+      background: linear-gradient(90deg, #ef4444, #dc2626);
+    }
+
+    .limit-warning-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-top: 4px;
+      border: 1px solid rgba(239, 68, 68, 0.5);
+    }
+
+    .today-spent-text {
+      font-size: 11.5px;
+      color: #94a3b8;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .today-spent-text strong {
+      color: #f1f5f9;
+      font-weight: 700;
+    }
+
+    /* SEGMENTED TABS (Tiền ra / Tiền vào) */
+    .tab-segment {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg-subtle);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      margin-bottom: 10px;
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .tab-button {
+      padding: 9px 0;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .tab-button.active-expense {
+      background: var(--bg-surface);
+      color: var(--color-expense);
+      box-shadow: var(--shadow-sm);
+      font-weight: 700;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .tab-button.active-income {
+      background: var(--bg-surface);
+      color: var(--color-income);
+      box-shadow: var(--shadow-sm);
+      font-weight: 700;
+      border: 1px solid rgba(22, 163, 74, 0.2);
+    }
+
+    /* AMOUNT DISPLAY (Auto-Thousand rule) */
+    .amount-display-container {
+      background: var(--bg-subtle);
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      text-align: center;
+      margin-bottom: 12px;
+      position: relative;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .amount-display-container.shake {
+      animation: shake 0.35s ease-in-out;
+      border-color: var(--color-expense);
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .amount-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .amount-value {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      line-height: 1.1;
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .amount-value.has-value {
+      color: var(--color-primary);
+    }
+
+    .amount-helper {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    /* CATEGORIES GRID */
+    .categories-section {
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .section-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      padding: 0 2px;
+    }
+
+    .section-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .swipe-hint {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      opacity: 0.8;
+    }
+
+    /* EXPENSE GRID (5 columns x 2 rows = 10 items) */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    /* INCOME GRID (3 columns) */
+    .category-grid.income-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .category-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 4px 6px 4px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid;
+      background: var(--cat-bg);
+      border-color: var(--cat-border);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.1s ease;
+      touch-action: manipulation;
+      min-height: 54px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .category-btn:active {
+      transform: scale(0.92);
+      filter: brightness(0.9);
+    }
+
+    .category-icon {
+      font-size: 19px;
+      line-height: 1;
+      margin-bottom: 3px;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+    }
+
+    .category-name {
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      color: var(--cat-text);
+      letter-spacing: -0.2px;
+    }
+
+    /* KEYPAD SECTION (3 columns x 4 rows) */
+    .keypad-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .key-btn {
+      height: 48px;
+      background: var(--key-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--key-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.08s ease, background-color 0.08s ease;
+      touch-action: manipulation;
+    }
+
+    .key-btn:active {
+      transform: scale(0.93);
+      background: var(--key-active);
+    }
+
+    .key-btn.action-clear {
+      color: #ef4444;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .key-btn.action-backspace {
+      color: #f59e0b;
+      font-size: 18px;
+    }
+
+    /* RECENT TRANSACTIONS */
+    .recent-section {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .recent-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 0 2px;
+    }
+
+    .recent-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .recent-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 230px;
+      overflow-y: auto;
+      padding-bottom: 8px;
+    }
+
+    .history-empty {
+      text-align: center;
+      padding: 16px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .item-icon-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      border: 1px solid;
+    }
+
+    .item-details {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .item-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-time {
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+
+    .item-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .item-amount {
+      font-size: 13.5px;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .item-amount.expense {
+      color: var(--color-expense);
+    }
+
+    .item-amount.income {
+      color: var(--color-income);
+    }
+
+    .delete-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .delete-btn:hover, .delete-btn:active {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      transform: scale(0.92);
+    }
+
+    /* TOAST FEEDBACK */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      width: 90%;
+      max-width: 360px;
+    }
+
+    .toast-message {
+      background: rgba(15, 23, 42, 0.95);
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-size: 12.5px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
+    }
+
+    @keyframes popIn {
+      from { transform: translateY(-20px) scale(0.85); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    /* MODAL SETTINGS */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-sheet {
+      background: var(--bg-surface);
+      width: 100%;
+      max-width: 440px;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: 20px 20px calc(env(safe-area-inset-bottom, 20px) + 16px) 20px;
+      max-height: 88vh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-overlay.open .modal-sheet {
+      transform: translateY(0);
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 4px;
+      margin: 0 auto 14px auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .close-modal-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-group {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .setting-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .setting-label {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .setting-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Switch toggles */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #cbd5e1;
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--color-primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Text Inputs */
+    .text-input {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 13.5px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .text-input:focus {
+      border-color: var(--color-primary);
+    }
+
+    .btn-primary {
+      padding: 10px 14px;
+      background: var(--color-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-secondary {
+      padding: 8px 12px;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-danger {
+      padding: 8px 12px;
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .code-preview {
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 11px;
+      overflow-x: auto;
+      max-height: 120px;
+      white-space: pre;
+    }
+
+    .guide-box {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .guide-box ol {
+      padding-left: 18px;
+      margin-top: 4px;
+    }
+
+    /* Swipe hint gesture animation */
+    .swipe-active-feedback {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      border-radius: var(--radius-md);
+      transition: background-color 0.15s ease;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-viewport" id="appViewport">
+    
+    <!-- TOP BAR -->
+    <header class="top-bar">
+      <div class="date-display">
+        <span class="date-heading" id="currentDateHeading">Thứ Hai, ngày 12/10</span>
+        <span class="date-sub" id="currentTimeSub">
+          <span style="display: inline-flex; align-items: center; gap: 4px; color: #16a34a; font-weight: 600;">
+            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #16a34a; box-shadow: 0 0 6px #16a34a;"></span>
+            Đã kết nối Google Sheets
+          </span>
+        </span>
+      </div>
+      <button class="icon-btn" id="openSettingsBtn" aria-label="Cài đặt">⚙️</button>
+    </header>
+
+    <!-- BALANCE CARD -->
+    <section class="balance-card">
+      <div class="balance-title-row">
+        <span class="balance-label">Số dư khả dụng</span>
+        <span class="balance-toggle-view" id="toggleBalanceVisibility" title="Ẩn/Hiện số dư">👁️</span>
+      </div>
+      <div class="balance-amount" id="balanceDisplay">
+        <span id="balanceNumber">10.000.000</span> <span style="font-size: 16px; font-weight: 600;">đ</span>
+      </div>
+
+      <!-- Daily Limit Container -->
+      <div class="limit-container" id="limitContainer" style="display: none;">
+        <div class="limit-info-row">
+          <span>Tiến độ hạn mức hôm nay:</span>
+          <span id="limitPercentText">0%</span>
+        </div>
+        <div class="limit-progress-bar">
+          <div class="limit-progress-fill" id="limitProgressFill"></div>
+        </div>
+        <div id="limitWarningBadgeContainer"></div>
+      </div>
+
+      <div class="today-spent-text">
+        <span>Hôm nay bạn đã tiêu:</span>
+        <strong id="todaySpentText">0 đ</strong>
+      </div>
+    </section>
+
+    <!-- TAB SEGMENT (TIỀN RA / TIỀN VÀO) -->
+    <nav class="tab-segment" id="tabSegment">
+      <button class="tab-button active-expense" id="tabExpense">
+        <span>💸</span> Tiền ra (Chi tiêu)
+      </button>
+      <button class="tab-button" id="tabIncome">
+        <span>💰</span> Tiền vào (Thu nhập)
+      </button>
+    </nav>
+
+    <!-- AMOUNT DISPLAY (AUTO-THOUSAND LOGIC) -->
+    <div class="amount-display-container" id="amountDisplayContainer">
+      <div class="amount-label" id="amountTypeLabel">Số tiền chi ra</div>
+      <div class="amount-value" id="amountValueText">
+        <span>0</span> <span style="font-size: 20px; font-weight: 700;">đ</span>
+      </div>
+      <div class="amount-helper" id="amountHelperText">Gõ số bất kỳ tự động × 1.000 đ (Ví dụ: 30 → 30.000 đ)</div>
+    </div>
+
+    <!-- SWIPEABLE INTERACTION AREA (CATEGORIES + KEYPAD) -->
+    <div id="swipeInteractiveArea" style="position: relative;">
+      <!-- CATEGORIES SECTION -->
+      <section class="categories-section">
+        <div class="section-title-row">
+          <span class="section-title" id="categoryTitle">Chạm 1 icon để ghi nhận ngay</span>
+          <span class="swipe-hint">↔ Vuốt đổi tab</span>
+        </div>
+        
+        <!-- Expense Categories Grid (10 categories) -->
+        <div class="category-grid" id="expenseCategoryGrid">
+          <!-- Rendered via JS -->
+        </div>
+
+        <!-- Income Categories Grid (3 categories) -->
+        <div class="category-grid income-grid" id="incomeCategoryGrid" style="display: none;">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- KEYPAD SECTION (3x4) -->
+      <section class="keypad-container" id="keypadContainer">
+        <button class="key-btn" data-key="1">1</button>
+        <button class="key-btn" data-key="2">2</button>
+        <button class="key-btn" data-key="3">3</button>
+        <button class="key-btn" data-key="4">4</button>
+        <button class="key-btn" data-key="5">5</button>
+        <button class="key-btn" data-key="6">6</button>
+        <button class="key-btn" data-key="7">7</button>
+        <button class="key-btn" data-key="8">8</button>
+        <button class="key-btn" data-key="9">9</button>
+        <button class="key-btn action-clear" data-key="C">C</button>
+        <button class="key-btn" data-key="0">0</button>
+        <button class="key-btn action-backspace" data-key="BACK">⌫</button>
+      </section>
+    </div>
+
+    <!-- RECENT TRANSACTIONS (LAST 5) -->
+    <section class="recent-section">
+      <div class="recent-header">
+        <span class="recent-title">Lịch sử 5 giao dịch gần nhất</span>
+        <span class="recent-count" id="recentCountText">0 mục</span>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">Chưa có giao dịch nào gần đây.</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2 class="modal-title">⚙️ Cài đặt hệ thống</h2>
+        <button class="close-modal-btn" id="closeSettingsBtn">✕</button>
+      </div>
+
+      <div class="settings-group">
+        
+        <!-- Light / Dark Mode -->
+        <div class="setting-item">
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Chế độ hiển thị (Sáng / Tối)</div>
+              <div class="setting-desc">Tùy chỉnh giao diện theo sở thích</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="themeSwitch">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Manual Balance Adjustment -->
+        <div class="setting-item">
+          <div class="setting-label">Điều chỉnh số dư ví hiện tại (VNĐ)</div>
+          <div class="setting-desc">Nhập số dư thực tế trong ví của bạn</div>
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <input type="number" id="settingBalanceInput" class="text-input" placeholder="Ví dụ: 10000000" step="1000">
+            <button class="btn-primary" id="saveBalanceBtn" style="white-space: nowrap;">Lưu số dư</button>
+          </div>
+        </div>
+
+        <!-- Daily Spending Limit -->
+        <div class="setting-item">
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Hạn mức chi tiêu mỗi ngày</div>
+              <div class="setting-desc">Cảnh báo đỏ khi chi tiêu vượt định mức</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="limitSwitch">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div id="limitAmountGroup" style="margin-top: 6px; display: none;">
+            <input type="number" id="settingLimitInput" class="text-input" placeholder="Hạn mức ngày (Ví dụ: 200000)" step="5000">
+          </div>
+        </div>
+
+        <!-- Google Apps Script Webhook Sync -->
+        <div class="setting-item">
+          <div class="setting-label">Google Sheets Webhook URL</div>
+          <div class="setting-desc">Tự động đồng bộ ngầm mỗi khi ghi nhận giao dịch</div>
+          <input type="url" id="settingWebhookInput" class="text-input" placeholder="https://script.google.com/macros/s/.../exec">
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <button class="btn-secondary" id="testWebhookBtn">🧪 Test gửi thử</button>
+            <button class="btn-primary" id="saveWebhookBtn">Lưu Webhook</button>
+          </div>
+
+          <!-- Apps Script Guide Accordion -->
+          <details style="margin-top: 8px; font-size: 11.5px; color: var(--text-muted);">
+            <summary style="cursor: pointer; font-weight: 600; color: var(--color-primary);">📄 Hướng dẫn mã Google Apps Script mẫu</summary>
+            <div class="guide-box" style="margin-top: 6px;">
+              <ol>
+                <li>Mở file Google Sheet của bạn &gt; Chọn <b>Tiện ích mở rộng</b> &gt; <b>Apps Script</b>.</li>
+                <li>Dán đoạn mã script dưới đây và nhấn <b>Triển khai</b> &gt; <b>Triển khai mới</b>:</li>
+              </ol>
+              <div class="code-preview">function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    new Date(),
+    data.formattedDate,
+    data.type,
+    data.category,
+    data.amount,
+    data.balanceAfter
+  ]);
+  return ContentService.createTextOutput(JSON.stringify({status: "success"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</div>
+              <p style="margin-top: 6px;">Chọn quyền truy cập: <b>Bất kỳ ai (Anyone)</b> rồi copy URL dán vào ô trên.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Data Backup & Reset -->
+        <div class="setting-item">
+          <div class="setting-label">Sao lưu & Quản lý dữ liệu</div>
+          <div class="setting-desc">Dữ liệu được lưu trữ an toàn trong máy (LocalStorage)</div>
+          <div style="display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;">
+            <button class="btn-secondary" id="exportDataBtn">📥 Xuất file JSON</button>
+            <button class="btn-danger" id="resetDataBtn">🗑️ Xóa toàn bộ dữ liệu</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    /* ==========================================================================
+       1. DATA DEFINITIONS & COLOR-CODED CATEGORIES
+       ========================================================================== */
+    const EXPENSE_CATEGORIES = [
+      { id: 'an_uong', name: 'Ăn uống', icon: '🍛', color: '#F97316' },
+      { id: 'ca_phe', name: 'Cà phê', icon: '☕', color: '#F59E0B' },
+      { id: 'tro_ktx', name: 'Trọ/KTX', icon: '🏠', color: '#2563EB' },
+      { id: 'hoc_tap', name: 'Học tập', icon: '📚', color: '#6366F1' },
+      { id: 'dich_vu_ai', name: 'Dịch vụ AI', icon: '🤖', color: '#8B5CF6' },
+      { id: 'quan_ao', name: 'Quần áo', icon: '👕', color: '#EC4899' },
+      { id: 'suc_khoe', name: 'Sức khỏe', icon: '💊', color: '#EF4444' },
+      { id: 'di_lai', name: 'Xăng xe', icon: '🛵', color: '#06B6D4' },
+      { id: 'nhu_yeu_pham', name: 'Nhu yếu', icon: '🛒', color: '#10B981' },
+      { id: 'khac_expense', name: 'Khác', icon: '📦', color: '#64748B' }
+    ];
+
+    const INCOME_CATEGORIES = [
+      { id: 'luong_day_them', name: 'Dạy thêm/Lương', icon: '💼', color: '#16A34A' },
+      { id: 'tro_cap', name: 'Trợ cấp gia đình', icon: '👨‍👩‍👧', color: '#0D9488' },
+      { id: 'khac_income', name: 'Khác', icon: '🎁', color: '#CA8A04' }
+    ];
+
+    /* ==========================================================================
+       2. STATE & LOCALSTORAGE MANAGEMENT
+       ========================================================================== */
+    const STORAGE_KEY_BALANCE = 'chi_tieu_balance';
+    const STORAGE_KEY_HISTORY = 'chi_tieu_history';
+    const STORAGE_KEY_SETTINGS = 'chi_tieu_settings';
+
+    const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyrW2usnveDLDDNH83v-ygl6vlsjX_QrmXhkAEJq3iC07z9rZMZgilKouoU4Cvf130h3g/exec';
+
+    let appState = {
+      balance: 10000000, // Mặc định 10.000.000 đ
+      history: [],
+      rawInput: '',      // Chuỗi số người dùng gõ
+      currentTab: 'expense', // 'expense' hoặc 'income'
+      isBalanceHidden: false,
+      settings: {
+        darkMode: false,
+        dailyLimitEnabled: false,
+        dailyLimitAmount: 200000,
+        webhookUrl: DEFAULT_WEBHOOK_URL
+      }
+    };
+
+    function loadStateFromStorage() {
+      try {
+        const savedBalance = localStorage.getItem(STORAGE_KEY_BALANCE);
+        if (savedBalance !== null) {
+          appState.balance = Number(savedBalance);
+        }
+
+        const savedHistory = localStorage.getItem(STORAGE_KEY_HISTORY);
+        if (savedHistory) {
+          appState.history = JSON.parse(savedHistory);
+        }
+
+        const savedSettings = localStorage.getItem(STORAGE_KEY_SETTINGS);
+        if (savedSettings) {
+          appState.settings = { ...appState.settings, ...JSON.parse(savedSettings) };
+        }
+
+        // Tự động gán link Google Apps Script webhook của người dùng nếu chưa có
+        if (!appState.settings.webhookUrl || appState.settings.webhookUrl.trim() === '') {
+          appState.settings.webhookUrl = DEFAULT_WEBHOOK_URL;
+          saveSettings();
+        }
+      } catch (e) {
+        console.error('Lỗi đọc LocalStorage:', e);
+      }
+    }
+
+    function saveBalance() {
+      localStorage.setItem(STORAGE_KEY_BALANCE, appState.balance.toString());
+    }
+
+    function saveHistory() {
+      localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(appState.history));
+    }
+
+    function saveSettings() {
+      localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(appState.settings));
+    }
+
+    /* ==========================================================================
+       3. WEB AUDIO API - MECHANICAL CLICK SOUND (~1200Hz, 5ms)
+       ========================================================================== */
+    let audioContext = null;
+
+    function playMechanicalClick() {
+      try {
+        if (!audioContext) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioContext = new AudioContextClass();
+          }
+        }
+        if (audioContext && audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        if (audioContext) {
+          const osc = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          const now = audioContext.currentTime;
+
+          // Âm thanh cơ học cực ngắn tần số cao 1200Hz, độ dài 5ms (0.005s)
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(1200, now);
+          osc.frequency.exponentialRampToValueAtTime(300, now + 0.005);
+
+          gainNode.gain.setValueAtTime(0.28, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.005);
+
+          osc.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+
+          osc.start(now);
+          osc.stop(now + 0.005);
+        }
+      } catch (err) {
+        // Trình duyệt không hỗ trợ hoặc chặn audio
+      }
+
+      // Giả lập xúc giác rung nhẹ nếu điện thoại hỗ trợ
+      if (navigator.vibrate) {
+        navigator.vibrate(8);
+      }
+    }
+
+    /* ==========================================================================
+       4. AUTO-THOUSAND CALCULATION & FORMATTING
+       ========================================================================== */
+    // Quy tắc: Bấm bất kỳ số nào tự động nhân với 1.000
+    // "5" -> 5.000, "30" -> 30.000, "120" -> 120.000, "1500" -> 1.500.000
+    function getCalculatedAmount() {
+      if (!appState.rawInput || appState.rawInput === '0') {
+        return 0;
+      }
+      return parseInt(appState.rawInput, 10) * 1000;
+    }
+
+    function formatNumberVND(num) {
+      return Number(num).toLocaleString('vi-VN');
+    }
+
+    /* ==========================================================================
+       5. GOOGLE APPS SCRIPT WEBHOOK SYNC
+       ========================================================================== */
+    function syncToGoogleSheets(transactionData) {
+      const url = appState.settings.webhookUrl;
+      if (!url || !url.trim().startsWith('http')) {
+        return;
+      }
+
+      const payload = {
+        id: transactionData.id,
+        datetime: transactionData.datetime,
+        formattedDate: transactionData.formattedDate,
+        type: transactionData.type === 'expense' ? 'Tiền ra' : 'Tiền vào',
+        category: transactionData.category,
+        amount: transactionData.amount,
+        balanceAfter: transactionData.balanceAfter
+      };
+
+      fetch(url.trim(), {
+        method: 'POST',
+        mode: 'no-cors',
+        cache: 'no-cache',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        console.log('Đã gửi đồng bộ tới Google Sheets:', payload);
+      })
+      .catch(err => {
+        console.warn('Lỗi khi gửi webhook:', err);
+      });
+    }
+
+    /* ==========================================================================
+       6. UI RENDERING & UPDATES
+       ========================================================================== */
+    const balanceNumberEl = document.getElementById('balanceNumber');
+    const toggleBalanceVisibilityBtn = document.getElementById('toggleBalanceVisibility');
+    const todaySpentTextEl = document.getElementById('todaySpentText');
+    const limitContainerEl = document.getElementById('limitContainer');
+    const limitPercentTextEl = document.getElementById('limitPercentText');
+    const limitProgressFillEl = document.getElementById('limitProgressFill');
+    const limitWarningBadgeContainer = document.getElementById('limitWarningBadgeContainer');
+    const amountValueTextEl = document.getElementById('amountValueText');
+    const amountTypeLabelEl = document.getElementById('amountTypeLabel');
+    const amountDisplayContainer = document.getElementById('amountDisplayContainer');
+    const expenseGridEl = document.getElementById('expenseCategoryGrid');
+    const incomeGridEl = document.getElementById('incomeCategoryGrid');
+    const historyListEl = document.getElementById('historyList');
+    const recentCountTextEl = document.getElementById('recentCountText');
+    const tabExpenseBtn = document.getElementById('tabExpense');
+    const tabIncomeBtn = document.getElementById('tabIncome');
+    const currentDateHeadingEl = document.getElementById('currentDateHeading');
+    const toastContainer = document.getElementById('toastContainer');
+
+    // Cập nhật ngày giờ thời gian thực theo định dạng tiếng Việt: "Thứ X, ngày DD/MM"
+    function updateRealtimeDate() {
+      const now = new Date();
+      const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+      const dayName = days[now.getDay()];
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      currentDateHeadingEl.textContent = `${dayName}, ngày ${day}/${month}`;
+    }
+
+    // Tính tổng số tiền đã chi tiêu trong ngày hôm nay
+    function calculateTodaySpent() {
+      const todayStr = new Date().toDateString();
+      return appState.history
+        .filter(item => item.type === 'expense' && new Date(item.datetime).toDateString() === todayStr)
+        .reduce((sum, item) => sum + item.amount, 0);
+    }
+
+    function renderBalanceCard() {
+      // Số dư khả dụng
+      if (appState.isBalanceHidden) {
+        balanceNumberEl.textContent = '••••••••';
+      } else {
+        balanceNumberEl.textContent = formatNumberVND(appState.balance);
+      }
+
+      // Hôm nay đã tiêu
+      const todaySpent = calculateTodaySpent();
+      todaySpentTextEl.textContent = `${formatNumberVND(todaySpent)} đ`;
+
+      // Hạn mức ngày (Daily limit)
+      if (appState.settings.dailyLimitEnabled && appState.settings.dailyLimitAmount > 0) {
+        limitContainerEl.style.display = 'block';
+        const limit = appState.settings.dailyLimitAmount;
+        const percent = Math.min(100, Math.round((todaySpent / limit) * 100));
+        limitPercentTextEl.textContent = `${formatNumberVND(todaySpent)} / ${formatNumberVND(limit)} đ (${percent}%)`;
+        limitProgressFillEl.style.width = `${percent}%`;
+
+        limitProgressFillEl.classList.remove('warning', 'danger');
+        limitWarningBadgeContainer.innerHTML = '';
+
+        if (todaySpent > limit) {
+          limitProgressFillEl.classList.add('danger');
+          const excess = todaySpent - limit;
+          limitWarningBadgeContainer.innerHTML = `<span class="limit-warning-badge">⚠️ Đã chi vượt hạn mức ${formatNumberVND(excess)} đ!</span>`;
+        } else if (percent >= 80) {
+          limitProgressFillEl.classList.add('warning');
+        }
+      } else {
+        limitContainerEl.style.display = 'none';
+      }
+    }
+
+    function renderAmountInputDisplay() {
+      const amount = getCalculatedAmount();
+      if (amount === 0) {
+        amountValueTextEl.innerHTML = `<span>0</span> <span style="font-size: 20px; font-weight: 700;">đ</span>`;
+        amountValueTextEl.classList.remove('has-value');
+      } else {
+        amountValueTextEl.innerHTML = `<span>${formatNumberVND(amount)}</span> <span style="font-size: 20px; font-weight: 700;">đ</span>`;
+        amountValueTextEl.classList.add('has-value');
+      }
+
+      if (appState.currentTab === 'expense') {
+        amountTypeLabelEl.textContent = 'Số tiền chi ra';
+        amountTypeLabelEl.style.color = 'var(--color-expense)';
+      } else {
+        amountTypeLabelEl.textContent = 'Số tiền thu vào';
+        amountTypeLabelEl.style.color = 'var(--color-income)';
+      }
+    }
+
+    function renderCategoryButtons() {
+      // 1. Expense categories
+      expenseGridEl.innerHTML = '';
+      EXPENSE_CATEGORIES.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'category-btn';
+        // Màu sắc nhận diện đặc trưng (background nhạt, viền và icon màu đậm nổi bật)
+        btn.style.setProperty('--cat-bg', `${cat.color}15`);
+        btn.style.setProperty('--cat-border', `${cat.color}60`);
+        btn.style.setProperty('--cat-text', cat.color);
+
+        btn.innerHTML = `
+          <span class="category-icon">${cat.icon}</span>
+          <span class="category-name">${cat.name}</span>
+        `;
+        btn.onclick = () => onSelectCategory(cat, 'expense');
+        expenseGridEl.appendChild(btn);
+      });
+
+      // 2. Income categories
+      incomeGridEl.innerHTML = '';
+      INCOME_CATEGORIES.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'category-btn';
+        btn.style.setProperty('--cat-bg', `${cat.color}18`);
+        btn.style.setProperty('--cat-border', `${cat.color}70`);
+        btn.style.setProperty('--cat-text', cat.color);
+
+        btn.innerHTML = `
+          <span class="category-icon">${cat.icon}</span>
+          <span class="category-name">${cat.name}</span>
+        `;
+        btn.onclick = () => onSelectCategory(cat, 'income');
+        incomeGridEl.appendChild(btn);
+      });
+    }
+
+    function renderRecentHistory() {
+      const recentItems = appState.history.slice(0, 5);
+      recentCountTextEl.textContent = `${recentItems.length}/5 mục`;
+
+      if (recentItems.length === 0) {
+        historyListEl.innerHTML = `<div class="history-empty">Chưa có giao dịch nào gần đây.</div>`;
+        return;
+      }
+
+      historyListEl.innerHTML = '';
+      recentItems.forEach(item => {
+        const isExpense = item.type === 'expense';
+        const sign = isExpense ? '-' : '+';
+        const amountClass = isExpense ? 'expense' : 'income';
+
+        const el = document.createElement('div');
+        el.className = 'history-item';
+        el.innerHTML = `
+          <div class="item-left">
+            <div class="item-icon-badge" style="background: ${item.color}20; border-color: ${item.color}; color: ${item.color};">
+              ${item.icon}
+            </div>
+            <div class="item-details">
+              <span class="item-name">${item.category}</span>
+              <span class="item-time">${item.formattedDate}</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <span class="item-amount ${amountClass}">${sign}${formatNumberVND(item.amount)} đ</span>
+            <button class="delete-btn" title="Xóa và hoàn lại tiền" onclick="deleteTransaction('${item.id}')">✕</button>
+          </div>
+        `;
+        historyListEl.appendChild(el);
+      });
+    }
+
+    /* ==========================================================================
+       7. ULTRA-FAST ENTRY FLOW (1-TOUCH LOGIC)
+       ========================================================================== */
+    function onSelectCategory(category, type) {
+      playMechanicalClick();
+      const amount = getCalculatedAmount();
+
+      // Nếu chưa nhập số tiền, rung thông báo
+      if (amount <= 0) {
+        amountDisplayContainer.classList.add('shake');
+        setTimeout(() => amountDisplayContainer.classList.remove('shake'), 400);
+        showToast('⚠️ Vui lòng gõ số tiền trước!', 'warning');
+        return;
+      }
+
+      // Tính số dư mới
+      if (type === 'expense') {
+        appState.balance -= amount;
+      } else {
+        appState.balance += amount;
+      }
+
+      // Tạo giao dịch
+      const now = new Date();
+      const formattedDate = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      
+      const newTransaction = {
+        id: 'tx_' + Date.now(),
+        datetime: now.toISOString(),
+        formattedDate: formattedDate,
+        type: type,
+        category: category.name,
+        icon: category.icon,
+        color: category.color,
+        amount: amount,
+        balanceAfter: appState.balance
+      };
+
+      // Lưu vào danh sách giao dịch
+      appState.history.unshift(newTransaction);
+      saveBalance();
+      saveHistory();
+
+      // Reset bàn phím về 0 ngay lập tức
+      appState.rawInput = '';
+
+      // Cập nhật lại giao diện
+      renderBalanceCard();
+      renderAmountInputDisplay();
+      renderRecentHistory();
+
+      // Thông báo phản hồi trực quan
+      const actionSymbol = type === 'expense' ? '-' : '+';
+      showToast(`${actionSymbol}${formatNumberVND(amount)} đ (${category.icon} ${category.name})`, 'success');
+
+      // Gửi đồng bộ ngầm tới Google Sheets Webhook
+      syncToGoogleSheets(newTransaction);
+    }
+
+    // Xóa giao dịch và tự động hoàn lại số dư
+    window.deleteTransaction = function(id) {
+      playMechanicalClick();
+      const index = appState.history.findIndex(item => item.id === id);
+      if (index === -1) return;
+
+      const item = appState.history[index];
+
+      // Hoàn lại số dư
+      if (item.type === 'expense') {
+        appState.balance += item.amount; // Chi tiêu bị xóa -> cộng lại số dư
+      } else {
+        appState.balance -= item.amount; // Thu nhập bị xóa -> trừ lại số dư
+      }
+
+      appState.history.splice(index, 1);
+      saveBalance();
+      saveHistory();
+
+      renderBalanceCard();
+      renderRecentHistory();
+
+      showToast(`Đã xóa & hoàn lại ${formatNumberVND(item.amount)} đ`, 'info');
+    };
+
+    /* ==========================================================================
+       8. KEYPAD INTERACTION (0-9, C, ⌫)
+       ========================================================================== */
+    function handleKeypadPress(key) {
+      playMechanicalClick();
+
+      if (key === 'C') {
+        appState.rawInput = '';
+      } else if (key === 'BACK') {
+        appState.rawInput = appState.rawInput.slice(0, -1);
+      } else if (/^[0-9]$/.test(key)) {
+        // Giới hạn tối đa 8 ký tự (99 triệu x 1.000 = 99 tỷ VNĐ)
+        if (appState.rawInput.length >= 8) return;
+        
+        // Không cho phép bấm số 0 ở đầu khi đang rỗng
+        if (appState.rawInput === '' && key === '0') {
+          return;
+        }
+        appState.rawInput += key;
+      }
+
+      renderAmountInputDisplay();
+    }
+
+    document.getElementById('keypadContainer').addEventListener('click', (e) => {
+      const btn = e.target.closest('.key-btn');
+      if (!btn) return;
+      const key = btn.getAttribute('data-key');
+      handleKeypadPress(key);
+    });
+
+    /* ==========================================================================
+       9. TAB SWITCH & TOUCH SWIPE GESTURE
+       ========================================================================== */
+    function switchTab(targetTab) {
+      if (appState.currentTab === targetTab) return;
+      playMechanicalClick();
+      appState.currentTab = targetTab;
+
+      if (targetTab === 'expense') {
+        tabExpenseBtn.className = 'tab-button active-expense';
+        tabIncomeBtn.className = 'tab-button';
+        expenseGridEl.style.display = 'grid';
+        incomeGridEl.style.display = 'none';
+        document.getElementById('categoryTitle').textContent = 'Chạm 1 icon để ghi nhận chi tiêu';
+      } else {
+        tabExpenseBtn.className = 'tab-button';
+        tabIncomeBtn.className = 'tab-button active-income';
+        expenseGridEl.style.display = 'none';
+        incomeGridEl.style.display = 'grid';
+        document.getElementById('categoryTitle').textContent = 'Chạm 1 icon để ghi nhận thu nhập';
+      }
+
+      renderAmountInputDisplay();
+    }
+
+    tabExpenseBtn.addEventListener('click', () => switchTab('expense'));
+    tabIncomeBtn.addEventListener('click', () => switchTab('income'));
+
+    // Swipe Gesture Detection
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const swipeArea = document.getElementById('swipeInteractiveArea');
+
+    swipeArea.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    swipeArea.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+
+      // Vuốt ngang có độ dài tối thiểu 45px và không bị lệch dọc quá 60px
+      if (Math.abs(diffX) > 45 && Math.abs(diffY) < 60) {
+        if (diffX > 0) {
+          // Vuốt sang phải -> Chuyển sang "Tiền vào"
+          switchTab('income');
+        } else {
+          // Vuốt sang trái -> Chuyển sang "Tiền ra"
+          switchTab('expense');
+        }
+      }
+    }, { passive: true });
+
+    // Hỗ trợ bàn phím vật lý trên máy tính (PC / Laptop shortcut)
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key >= '0' && e.key <= '9') {
+        handleKeypadPress(e.key);
+      } else if (e.key === 'Backspace') {
+        handleKeypadPress('BACK');
+      } else if (e.key === 'Escape' || e.key.toLowerCase() === 'c') {
+        handleKeypadPress('C');
+      } else if (e.key === 'ArrowLeft') {
+        switchTab('expense');
+      } else if (e.key === 'ArrowRight') {
+        switchTab('income');
+      }
+    });
+
+    /* ==========================================================================
+       10. SETTINGS MODAL & THEME TOGGLE
+       ========================================================================== */
+    const settingsModal = document.getElementById('settingsModal');
+    const openSettingsBtn = document.getElementById('openSettingsBtn');
+    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+    const themeSwitch = document.getElementById('themeSwitch');
+    const limitSwitch = document.getElementById('limitSwitch');
+    const limitAmountGroup = document.getElementById('limitAmountGroup');
+    const settingLimitInput = document.getElementById('settingLimitInput');
+    const settingBalanceInput = document.getElementById('settingBalanceInput');
+    const saveBalanceBtn = document.getElementById('saveBalanceBtn');
+    const settingWebhookInput = document.getElementById('settingWebhookInput');
+    const saveWebhookBtn = document.getElementById('saveWebhookBtn');
+    const testWebhookBtn = document.getElementById('testWebhookBtn');
+    const exportDataBtn = document.getElementById('exportDataBtn');
+    const resetDataBtn = document.getElementById('resetDataBtn');
+    const metaThemeColor = document.getElementById('meta-theme-color');
+
+    function applyTheme(isDark) {
+      if (isDark) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        metaThemeColor.setAttribute('content', '#090d16');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        metaThemeColor.setAttribute('content', '#ffffff');
+      }
+    }
+
+    openSettingsBtn.addEventListener('click', () => {
+      playMechanicalClick();
+      // Nạp dữ liệu cài đặt hiện tại vào form
+      themeSwitch.checked = appState.settings.darkMode;
+      limitSwitch.checked = appState.settings.dailyLimitEnabled;
+      limitAmountGroup.style.display = appState.settings.dailyLimitEnabled ? 'block' : 'none';
+      settingLimitInput.value = appState.settings.dailyLimitAmount || 200000;
+      settingBalanceInput.value = appState.balance;
+      settingWebhookInput.value = appState.settings.webhookUrl || '';
+      
+      settingsModal.classList.add('open');
+    });
+
+    closeSettingsBtn.addEventListener('click', () => {
+      playMechanicalClick();
+      settingsModal.classList.remove('open');
+    });
+
+    settingsModal.addEventListener('click', (e) => {
+      if (e.target === settingsModal) {
+        settingsModal.classList.remove('open');
+      }
+    });
+
+    // Toggle Theme
+    themeSwitch.addEventListener('change', () => {
+      playMechanicalClick();
+      appState.settings.darkMode = themeSwitch.checked;
+      applyTheme(appState.settings.darkMode);
+      saveSettings();
+    });
+
+    // Toggle Daily Limit
+    limitSwitch.addEventListener('change', () => {
+      playMechanicalClick();
+      appState.settings.dailyLimitEnabled = limitSwitch.checked;
+      limitAmountGroup.style.display = limitSwitch.checked ? 'block' : 'none';
+      saveSettings();
+      renderBalanceCard();
+    });
+
+    settingLimitInput.addEventListener('input', () => {
+      const val = Number(settingLimitInput.value);
+      if (val >= 0) {
+        appState.settings.dailyLimitAmount = val;
+        saveSettings();
+        renderBalanceCard();
+      }
+    });
+
+    // Lưu số dư ví thủ công
+    saveBalanceBtn.addEventListener('click', () => {
+      playMechanicalClick();
+      const val = Number(settingBalanceInput.value);
+      if (!isNaN(val)) {
+        appState.balance = val;
+        saveBalance();
+        renderBalanceCard();
+        showToast(`Đã cập nhật số dư: ${formatNumberVND(val)} đ`, 'success');
+      }
+    });
+
+    // Lưu link Webhook
+    saveWebhookBtn.addEventListener('click', () => {
+      playMechanicalClick();
+      appState.settings.webhookUrl = settingWebhookInput.value.trim();
+      saveSettings();
+      showToast('Đã lưu Google Sheets Webhook!', 'success');
+    });
+
+    // Test gửi thử Webhook
+    testWebhookBtn.addEventListener('click', () => {
+      playMechanicalClick();
+      const url = settingWebhookInput.value.trim();
+      if (!url) {
+        showToast('Vui lòng nhập link Webhook trước!', 'warning');
+        return;
+      }
+      showToast('Đang gửi kiểm tra Webhook...', 'info');
+      syncToGoogleSheets({
+        id: 'test_' + Date.now(),
+        datetime: new Date().toISOString(),
+        formattedDate: 'Kiểm tra kết nối',
+        type: 'expense',
+        category: 'Test Webhook',
+        amount: 1000,
+        balanceAfter: appState.balance
+      });
+      setTimeout(() => {
+        showToast('Đã phát lệnh test tới Google Sheets!', 'success');
+      }, 700);
+    });
+
+    // Toggle ẩn/hiện số dư ví
+    toggleBalanceVisibilityBtn.addEventListener('click', () => {
+      playMechanicalClick();
+      appState.isBalanceHidden = !appState.isBalanceHidden;
+      toggleBalanceVisibilityBtn.textContent = appState.isBalanceHidden ? '🙈' : '👁️';
+      renderBalanceCard();
+    });
+
+    // Xuất dữ liệu JSON
+    exportDataBtn.addEventListener('click', () => {
+      playMechanicalClick();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `so-tay-chi-tieu-backup-${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('Đã tải xuống file sao lưu!', 'success');
+    });
+
+    // Xóa toàn bộ dữ liệu
+    resetDataBtn.addEventListener('click', () => {
+      playMechanicalClick();
+      if (confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử chi tiêu và đưa số dư về 0?')) {
+        appState.balance = 0;
+        appState.history = [];
+        appState.rawInput = '';
+        saveBalance();
+        saveHistory();
+        renderBalanceCard();
+        renderAmountInputDisplay();
+        renderRecentHistory();
+        showToast('Đã đặt lại dữ liệu về mặc định.', 'info');
+      }
+    });
+
+    /* ==========================================================================
+       11. TOAST NOTIFICATIONS HELPER
+       ========================================================================== */
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = 'toast-message';
+      let icon = 'ℹ️';
+      if (type === 'success') icon = '✅';
+      if (type === 'warning') icon = '⚠️';
+
+      toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+      toastContainer.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 2200);
+    }
+
+    /* ==========================================================================
+       12. PWA SERVICE WORKER REGISTRATION (BLOB-BASED)
+       ========================================================================== */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        try {
+          const swCode = `
+            const CACHE_NAME = 'so-tay-chi-tieu-v1';
+            self.addEventListener('install', e => {
+              self.skipWaiting();
+            });
+            self.addEventListener('activate', e => {
+              e.waitUntil(clients.claim());
+            });
+            self.addEventListener('fetch', e => {
+              e.respondWith(
+                fetch(e.request).catch(() => caches.match(e.request))
+              );
+            });
+          `;
+          const blob = new Blob([swCode], { type: 'application/javascript' });
+          const swUrl = URL.createObjectURL(blob);
+          navigator.serviceWorker.register(swUrl).catch(err => {
+            console.log('SW registration note:', err);
+          });
+        } catch (e) {
+          // Bỏ qua nếu môi trường không cho phép blob SW
+        }
+      });
+    }
+
+    /* ==========================================================================
+       13. INITIALIZATION
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStateFromStorage();
+      applyTheme(appState.settings.darkMode);
+      updateRealtimeDate();
+      renderCategoryButtons();
+      renderBalanceCard();
+      renderAmountInputDisplay();
+      renderRecentHistory();
+
+      // Cập nhật ngày theo phút
+      setInterval(updateRealtimeDate, 60000);
+    });
+  </script>
+</body>
+</html>
